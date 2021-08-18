@@ -11,6 +11,21 @@ def login(driver, email):
     email_input.send_keys(email)
     email_input.submit()
 
+def book_place(driver, number_of_place, email_test):
+    login(driver, email_test)
+    WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
+    )
+    btn = driver.find_element(By.XPATH, "//html/body/ul/li[1]/a")
+    btn.click()
+    WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'Places')]"))
+    )
+    placesinput = driver.find_element_by_name("places")
+    placesinput.send_keys(number_of_place)
+    placesinput.submit()
+
+
 class Testlogin(Client_test, Driver):
     """This is class for ui tests."""
 
@@ -43,22 +58,21 @@ class Testbooking(Client_test, Driver):
     @staticmethod
     def test_try_to_book_more_than_point(driver):
         email_test = "admin@irontemple.com"
-        login(driver, email_test)
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
-        )
-        btn = driver.find_element(By.XPATH,"//html/body/ul/li[1]/a")
-        btn.click()
-        WebDriverWait(driver, 5).until(
-            EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'Places')]"))
-        )
-        print("ok")
-        placesinput = driver.find_element_by_name("places")
-        placesinput.send_keys("10")
-        placesinput.submit()
+        number_of_places = 10
+        book_place(driver,number_of_places,email_test)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'You')]"))
         )
         assert "You don't have enough points" in driver.page_source
+
+    @staticmethod
+    def test_try_to_book_more_than_12_places(driver):
+        email_test = "john@simplylift.co"
+        number_of_places = 13
+        book_place(driver, number_of_places, email_test)
+        WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'You')]"))
+        )
+        assert "You can't book than 12 places" in driver.page_source
 
 
