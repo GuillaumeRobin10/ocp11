@@ -11,8 +11,7 @@ def login(driver, email):
     email_input.send_keys(email)
     email_input.submit()
 
-def book_place(driver, number_of_place, email_test):
-    login(driver, email_test)
+def book_place(driver, number_of_place):
     WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
     )
@@ -59,7 +58,8 @@ class Testbooking(Client_test, Driver):
     def test_try_to_book_more_than_point(driver):
         email_test = "admin@irontemple.com"
         number_of_places = 10
-        book_place(driver,number_of_places,email_test)
+        login(driver, email_test)
+        book_place(driver,number_of_places)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'You')]"))
         )
@@ -69,10 +69,24 @@ class Testbooking(Client_test, Driver):
     def test_try_to_book_more_than_12_places(driver):
         email_test = "john@simplylift.co"
         number_of_places = 13
-        book_place(driver, number_of_places, email_test)
+        login(driver, email_test)
+        book_place(driver, number_of_places)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'You')]"))
         )
         assert "You can't book than 12 places" in driver.page_source
+
+    @staticmethod
+    def test_reflected_purchase(driver):
+        email_test = "john@simplylift.co"
+        login(driver, email_test)
+        number_of_places = 10
+        book_place(driver, number_of_places)
+        WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'Great')]"))
+        )
+        assert f"Points available: {3}" in driver.page_source
+
+
 
 
