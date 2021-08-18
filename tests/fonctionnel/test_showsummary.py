@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 
 from tests.conftest  import Driver, Client_test
@@ -87,6 +88,17 @@ class Testbooking(Client_test, Driver):
         )
         assert f"Points available: {3}" in driver.page_source
 
-
-
+    @staticmethod
+    def test_book_past_competition(driver):
+        email_test = "john@simplylift.co"
+        login(driver, email_test)
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
+        )
+        try:
+            driver.find_element(By.XPATH, "//html/body/ul/li[2]/a")
+            have_a_link = True
+        except NoSuchElementException:
+            have_a_link = False
+        assert have_a_link == False
 
