@@ -81,12 +81,12 @@ class Testbooking(Client_test, Driver):
     def test_reflected_purchase(driver):
         email_test = "john@simplylift.co"
         login(driver, email_test)
-        number_of_places = 10
+        number_of_places = 3
         book_place(driver, number_of_places)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'Great')]"))
         )
-        assert f"Points available: {3}" in driver.page_source
+        assert f"Points available: {4}" in driver.page_source
 
     @staticmethod
     def test_book_past_competition(driver):
