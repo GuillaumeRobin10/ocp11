@@ -38,4 +38,27 @@ class Testlogin(Client_test, Driver):
         assert f"Welcome, {email_test}" in driver.page_source
 
 
+class Testbooking(Client_test, Driver):
+
+    @staticmethod
+    def test_try_to_book_more_than_point(driver):
+        email_test = "admin@irontemple.com"
+        login(driver, email_test)
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
+        )
+        btn = driver.find_element(By.XPATH,"//html/body/ul/li[1]/a")
+        btn.click()
+        WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//p[contains(text(),'Places')]"))
+        )
+        print("ok")
+        placesinput = driver.find_element_by_name("places")
+        placesinput.send_keys("10")
+        placesinput.submit()
+        WebDriverWait(driver, 5).until(
+            EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'You')]"))
+        )
+        assert "You don't have enough points" in driver.page_source
+
 
