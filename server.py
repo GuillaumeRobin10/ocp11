@@ -68,7 +68,7 @@ def purchasePlaces():
         if placesRequired * 3  <= int(club['points']):
             competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
             club["points"] = int(club["points"]) - (placesRequired * 3 )
-            flash('Great-booking complete!')
+            flash(f"Great-booking complete!, you've {placesRequired} places")
         else:
             flash("You don't have enough points")
     else :
@@ -77,7 +77,9 @@ def purchasePlaces():
 
 
 # TODO: Add route for points display
-
+@app.route("/board")
+def displayboard():
+    return render_template("displayboard.html", clubs=loadClubs())
 
 @app.route('/logout')
 def logout():
