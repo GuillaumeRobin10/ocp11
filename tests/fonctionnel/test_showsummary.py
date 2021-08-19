@@ -102,3 +102,13 @@ class Testbooking(Client_test, Driver):
             have_a_link = False
         assert have_a_link == False
 
+class Testdisplayboard(Client_test, Driver):
+
+    @staticmethod
+    def test_display_board(driver):
+        btn = driver.find_element(By.XPATH, "//html/body/a")
+        btn.click()
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Display board')]"))
+        )
+        assert "Simply Lift | 13 points" in driver.page_source
