@@ -8,9 +8,9 @@ def past_date(date):
     competition_date = datetime.strptime(date, dateformatter)
     today = datetime.now()
     if today > competition_date:
-        return False
-    else:
         return True
+    else:
+        return False
 
 
 def loadClubs():
