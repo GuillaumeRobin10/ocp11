@@ -6,6 +6,10 @@ from selenium.common.exceptions import NoSuchElementException
 
 from tests.conftest  import Driver, Client_test
 
+WRONG_EMAIL = "notagoodemail@test.com"
+GOOD_EMAIL = "john@simplylift.co"
+GOOD_EMAIL_WITH_LESS_POINTS = "admin@irontemple.com"
+
 
 def login(driver, email):
     email_input = driver.find_element_by_name("email")
@@ -30,36 +34,34 @@ class Testlogin(Client_test, Driver):
     """This is class for ui tests."""
 
     @staticmethod
-    def test_login_is_invalid(driver):
+    def test_login_fail(driver):
         """Test as index and show_summary routes endpoint."""
         # the user enters his email and clicks on the "enter" button.
         # it is redirected to index page with a error message.
-        login(driver,"unknown@unknown.com")
+        login(driver,WRONG_EMAIL)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'Sorry')]"))
         )
         assert "Sorry, that email wasn't found." in driver.page_source
 
     @staticmethod
-    def test_login_is_valid(driver):
+    def test_login_success(driver):
         """Test as index and show_summary routes endpoint."""
         # the user enters his email and clicks on the "enter" button.
         # .
-        email_test="john@simplylift.co"
-        login(driver, email_test)
+        login(driver, GOOD_EMAIL)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
         )
-        assert f"Welcome, {email_test}" in driver.page_source
+        assert f"Welcome, {GOOD_EMAIL}" in driver.page_source
 
 
 class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_try_to_book_more_than_point(driver):
-        email_test = "admin@irontemple.com"
         number_of_places = 10
-        login(driver, email_test)
+        login(driver, GOOD_EMAIL_WITH_LESS_POINTS)
         book_place(driver,number_of_places)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'You')]"))
@@ -68,9 +70,8 @@ class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_try_to_book_more_than_12_places(driver):
-        email_test = "john@simplylift.co"
         number_of_places = 13
-        login(driver, email_test)
+        login(driver, GOOD_EMAIL)
         book_place(driver, number_of_places)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'You')]"))
@@ -79,8 +80,7 @@ class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_reflected_purchase(driver):
-        email_test = "john@simplylift.co"
-        login(driver, email_test)
+        login(driver, GOOD_EMAIL)
         number_of_places = 3
         book_place(driver, number_of_places)
         WebDriverWait(driver, 5).until(
@@ -90,8 +90,7 @@ class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_book_past_competition(driver):
-        email_test = "john@simplylift.co"
-        login(driver, email_test)
+        login(driver, GOOD_EMAIL)
         WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
         )
