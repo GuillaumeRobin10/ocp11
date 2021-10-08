@@ -1,7 +1,0 @@
-{
-  "test_showsummary.py::TestUi::test_login_invalid": true,
-  "test_showsummary.py::Testui::test_bookplaces": true,
-  "test_showsummary.py::Testui::test_bookplaces_fail": true,
-  "test_showsummary.py::test_login_invalid": true,
-  "test_showsummary.py::test_login_ui": true
-}

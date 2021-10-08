@@ -7,6 +7,7 @@ from selenium.webdriver.firefox.options import Options
 
 from server import app
 
+
 class Client_test:
     """This is class for create fixture."""
     @staticmethod
