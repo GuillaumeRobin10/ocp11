@@ -31,19 +31,19 @@ def find_user_with_email(club_database,email):
     for club in club_database:
         if club["email"] == email:
             return club
-    return "404error"
+    return None
 
 def find_user_with_name(club_database,name):
     for club in club_database:
         if club["name"] == name:
             return club
-    return "404error"
+    return None
 
 def find_competition_with_name(competition_database,name):
     for competitition in competition_database:
         if competitition["name"] == name:
             return competitition
-    return "404error"
+    return None
 
 def booking(club, competition, place):
     reponses = {"club":club,
@@ -81,7 +81,7 @@ def index():
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
     user = find_user_with_email(clubs,request.form["email"])
-    if not user == "404error":
+    if user:
         return render_template('welcome.html', club=user, competitions=competitions)
     else:
         flash("Sorry, that email wasn't found.")
