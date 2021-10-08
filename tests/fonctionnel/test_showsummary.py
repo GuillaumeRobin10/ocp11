@@ -12,11 +12,22 @@ GOOD_EMAIL_WITH_LESS_POINTS = "admin@irontemple.com"
 
 
 def login(driver, email):
+    """
+    fonction pour se log au site
+    :param driver: obj driver
+    :param email: string email de la base de donnée
+    """
     email_input = driver.find_element_by_name("email")
     email_input.send_keys(email)
     email_input.submit()
 
 def book_place(driver, number_of_place):
+    """
+    fonction pour reserver des places
+    :param driver: obj driver
+    :param number_of_place: int , nombre de place souhaité
+
+    """
     WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
     )
@@ -31,13 +42,14 @@ def book_place(driver, number_of_place):
 
 
 class Testlogin(Client_test, Driver):
-    """This is class for ui tests."""
 
     @staticmethod
     def test_login_fail(driver):
-        """Test as index and show_summary routes endpoint."""
-        # the user enters his email and clicks on the "enter" button.
-        # it is redirected to index page with a error message.
+        """
+        l'utilisateur entre un email invalide, un message d'erreur s'affiche
+
+        """
+
         login(driver,WRONG_EMAIL)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//li[contains(text(),'Sorry')]"))
@@ -46,9 +58,11 @@ class Testlogin(Client_test, Driver):
 
     @staticmethod
     def test_login_success(driver):
-        """Test as index and show_summary routes endpoint."""
-        # the user enters his email and clicks on the "enter" button.
-        # .
+        """
+        the user enters his email and clicks on the "enter" button.
+        login succecssfully
+        """
+
         login(driver, GOOD_EMAIL)
         WebDriverWait(driver, 5).until(
             EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
@@ -60,6 +74,9 @@ class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_try_to_book_more_than_point(driver):
+        """
+        test to book more than allowed by point credits.
+        """
         number_of_places = 10
         login(driver, GOOD_EMAIL_WITH_LESS_POINTS)
         book_place(driver,number_of_places)
@@ -70,6 +87,9 @@ class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_try_to_book_more_than_12_places(driver):
+        """
+        test to book more than allowed by systems.
+        """
         number_of_places = 13
         login(driver, GOOD_EMAIL)
         book_place(driver, number_of_places)
@@ -80,6 +100,9 @@ class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_reflected_purchase(driver):
+        """
+        test to check if points are correctly reflected
+        """
         login(driver, GOOD_EMAIL)
         number_of_places = 3
         book_place(driver, number_of_places)
@@ -90,6 +113,10 @@ class Testbooking(Client_test, Driver):
 
     @staticmethod
     def test_book_past_competition(driver):
+        """
+        test if you can book places for a past competition
+
+        """
         login(driver, GOOD_EMAIL)
         WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, "//h2[contains(text(),'Welcome')]"))
@@ -105,6 +132,9 @@ class Testdisplayboard(Client_test, Driver):
 
     @staticmethod
     def test_display_board(driver):
+        """
+        test of the dashboard are visible
+        """
         btn = driver.find_element(By.XPATH, "//html/body/a")
         btn.click()
         WebDriverWait(driver, 10).until(

@@ -1,20 +1,38 @@
 from server import past_date
 import server as app
+import pytest
 
-GOOD_CLUB ={"name": "Simply Lift",
+@pytest.fixture()
+def good_club():
+    return {"name": "Simply Lift",
            "email":"john@simplylift.co",
            "points":"13"}
 
-GOOD_COMPETITION = {"name": "Spring Festival",
+@pytest.fixture()
+def good_competition():
+    return {"name": "Spring Festival",
                     "date": "2022-03-27 10:00:00",
                     "numberOfPlaces": "25",
                     "past":False}
+@pytest.fixture()
+def good_email():
+    return "john@simplylift.co"
 
-GOOD_EMAIL = "john@simplylift.co"
-WRONG_EMAIL = "wrong@email.com"
-WRONG_NAME = "wrong name"
-GOOD_CLUB_NAME = "Simply Lift"
-GOOD_COMPETITION_NAME = "Spring Festival"
+@pytest.fixture()
+def wrong_email():
+    return "wrong@email.com"
+
+@pytest.fixture()
+def wrong_name():
+    return "wrong name"
+
+@pytest.fixture()
+def good_club_name():
+    return "Simply Lift"
+
+@pytest.fixture()
+def good_competition_name():
+    return "Spring Festival"
 
 
 def test_past_competition():
@@ -29,54 +47,59 @@ def test_bookable_competition():
     assert response == False
 
 
-def test_find_user_with_wrong_email():
-    response = app.find_user_with_email(app.clubs, WRONG_EMAIL)
-    assert response == "404error"
+def test_find_user_with_wrong_email(wrong_email):
+    """
+
+    :param wrong_email: fixture wrong email email
+    :return:
+    """
+    response = app.find_user_with_email(app.clubs, wrong_email)
+    assert response is None
 
 
-def test_find_user_with_good_email():
-    response = app.find_user_with_email(app.clubs, GOOD_EMAIL)
-    assert response == GOOD_CLUB
+def test_find_user_with_good_email(good_email,good_club):
+    response = app.find_user_with_email(app.clubs, good_email)
+    assert response == good_club
 
 
-def test_find_user_with_wrong_name():
-    response = app.find_user_with_name(app.clubs, WRONG_NAME)
-    assert response == "404error"
+def test_find_user_with_wrong_name(wrong_name):
+    response = app.find_user_with_name(app.clubs, wrong_name)
+    assert response is None
 
 
-def test_find_user_with_good_name():
-    response = app.find_user_with_name(app.clubs, GOOD_CLUB_NAME)
-    assert response == GOOD_CLUB
+def test_find_user_with_good_name(good_club_name,good_club ):
+    response = app.find_user_with_name(app.clubs, good_club_name)
+    assert response == good_club
 
-def test_find_competition_with_wrong_name():
-    response = app.find_competition_with_name(app.clubs, WRONG_NAME)
-    assert response == "404error"
+def test_find_competition_with_wrong_name(wrong_name):
+    response = app.find_competition_with_name(app.clubs, wrong_name)
+    assert response is None
 
 
-def test_find_competition_with_good_name():
-    response = app.find_competition_with_name(app.competitions, GOOD_COMPETITION_NAME)
-    assert response == GOOD_COMPETITION
+def test_find_competition_with_good_name(good_competition, good_competition_name):
+    response = app.find_competition_with_name(app.competitions, good_competition_name)
+    assert response == good_competition
 
-def test_booking_works_well():
-    response = app.booking(GOOD_CLUB, GOOD_COMPETITION, 2)
+def test_booking_works_well(good_club,good_competition):
+    response = app.booking(good_club, good_competition, 2)
     assert response["message"] == "Great-booking complete!, you've book 2 places"
-    assert response["competition"] == GOOD_COMPETITION
+    assert response["competition"] == good_competition
     assert response["club"]["points"] == 7
 
-def test_booking_not_enough_points():
-    response = app.booking(GOOD_CLUB, GOOD_COMPETITION, 10)
+def test_booking_not_enough_points(good_club, good_competition):
+    response = app.booking(good_club, good_competition, 10)
     assert response["message"] == "You don't have enough points"
-    assert response["competition"] == GOOD_COMPETITION
-    assert response["club"] == GOOD_CLUB
+    assert response["competition"] == good_competition
+    assert response["club"] == good_club
 
-def test_booking_more_than_12_places():
-    response = app.booking(GOOD_CLUB, GOOD_COMPETITION, 1000)
+def test_booking_more_than_12_places(good_club, good_competition):
+    response = app.booking(good_club, good_competition, 1000)
     assert response["message"] == "You can't book than 12 places"
-    assert response["competition"] == GOOD_COMPETITION
-    assert response["club"] == GOOD_CLUB
+    assert response["competition"] == good_competition
+    assert response["club"] == good_club
 
-def test_booking_places_is_not_an_integer():
-    response = app.booking(GOOD_CLUB, GOOD_COMPETITION, "a")
+def test_booking_places_is_not_an_integer(good_club, good_competition):
+    response = app.booking(good_club, good_competition, "a")
     assert response["message"] == "Something went wrong"
-    assert response["competition"] == GOOD_COMPETITION
-    assert response["club"] == GOOD_CLUB
+    assert response["competition"] == good_competition
+    assert response["club"] == good_club
