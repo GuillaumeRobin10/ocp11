@@ -21,4 +21,4 @@ le but du projet est la création de différent test.
 ## Utilisation et documentation
 
 Pour lancer les test utilisez la commande `$ pytest`
-Pour lancer le rapport locust lancez le serveur puis la commande `$ locust -f locust/locust_files.py`
+Pour lancer le rapport locust lancez le serveur puis la commande `$ locust -f locust/locust_file.py`
